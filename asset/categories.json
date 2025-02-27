@@ -1,0 +1,41 @@
+[
+  {
+    "id": 1,
+    "name": "Makanan",
+    "subcategories": [
+      { "id": 101, "name": "Nasi & Lauk" },
+      { "id": 102, "name": "Mie Ayam" },
+      { "id": 103, "name": "Cemilan" },
+      { "id": 104, "name": "Kue & Roti" },
+      { "id": 105, "name": "Bakso" }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Minuman",
+    "subcategories": [
+      { "id": 201, "name": "Teh & Kopi" },
+      { "id": 202, "name": "Susu & Olahan" },
+      { "id": 203, "name": "Jus & Minuman Buah" },
+      { "id": 204, "name": "Minuman Bersoda" }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Barang",
+    "subcategories": [
+      { "id": 301, "name": "Kebutuhan Rumah Tangga" },
+      { "id": 302, "name": "Alat Tulis & Kantor" },
+      { "id": 303, "name": "Elektronik & Aksesoris" }
+    ]
+  },
+  {
+    "id": 4,
+    "name": "Jasa",
+    "subcategories": [
+      { "id": 401, "name": "Servis Elektronik" },
+      { "id": 402, "name": "Jasa Kebersihan" },
+      { "id": 403, "name": "Jasa Pengiriman" }
+    ]
+  }
+]
