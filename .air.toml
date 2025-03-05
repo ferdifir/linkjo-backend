@@ -1,0 +1,13 @@
+# File konfigurasi untuk Air
+root = "."   # Direktori root proyek
+tmp_dir = "tmp"  # Folder sementara untuk build
+build = "go build -o tmp/main"  # Perintah untuk build
+cmd = "./tmp/main"  # Perintah untuk menjalankan aplikasi
+
+[log]
+time = true
+
+[watcher]
+include = ["."]
+exclude = ["tmp", "vendor", "node_modules"]
+extensions = ["go", "tpl", "tmpl", "html"]

@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"linkjo/app/models"
 	"linkjo/app/services"
 	"linkjo/app/validators"
@@ -11,9 +12,9 @@ import (
 
 func GetProducts(c *fiber.Ctx) error {
 	var tenantID *uint
-	var categoryID *uint
 
-	if tID := c.Query("tenant_id"); tID != "" {
+	tID, ok := c.Locals("tenant_id").(string)
+	if ok {
 		id, err := strconv.ParseUint(tID, 10, 32)
 		if err == nil {
 			t := uint(id)
@@ -21,15 +22,7 @@ func GetProducts(c *fiber.Ctx) error {
 		}
 	}
 
-	if cID := c.Query("category_id"); cID != "" {
-		id, err := strconv.ParseUint(cID, 10, 32)
-		if err == nil {
-			cat := uint(id)
-			categoryID = &cat
-		}
-	}
-
-	products, err := services.GetAllProducts(tenantID, categoryID)
+	products, err := services.GetAllProducts(tenantID)
 	if err != nil {
 		response := models.APIResponse{
 			Success: false,
@@ -39,12 +32,19 @@ func GetProducts(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).JSON(response)
 	}
 
+	message := "Products retrieved successfully"
+	if len(products) == 0 {
+		message = "No products found"
+	}
+
 	response := models.APIResponse{
 		Success: true,
-		Message: "Products retrieved successfully",
+		Message: message,
 		Data:    products,
 	}
+
 	return c.JSON(response)
+
 }
 
 func GetProductByID(c *fiber.Ctx) error {
@@ -79,6 +79,8 @@ func GetProductByID(c *fiber.Ctx) error {
 func CreateProduct(c *fiber.Ctx) error {
 	var req validators.ProductRequest
 
+	categoryIDStr := c.FormValue("category_id")
+
 	if err := c.BodyParser(&req); err != nil {
 		response := models.APIResponse{
 			Success: false,
@@ -98,6 +100,15 @@ func CreateProduct(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusUnauthorized).JSON(response)
 	}
 
+	categoryID, err := strconv.ParseUint(categoryIDStr, 10, 64)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(models.APIResponse{
+			Success: false,
+			Message: "Invalid categoryID format",
+			Data:    nil,
+		})
+	}
+
 	tid, err := strconv.ParseUint(tenantID, 10, 32)
 	if err != nil {
 		response := models.APIResponse{
@@ -108,14 +119,18 @@ func CreateProduct(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(response)
 	}
 
+	imagePaths := c.Locals("image_paths").(map[string][]string)
+	fmt.Println("Image Paths:", imagePaths)
+	// Image Paths: map[image:[./uploads/1741009398-1000041047.jpg]]
+
 	product := models.Product{
 		TenantID:    uint(tid),
-		CategoryID:  req.CategoryID,
+		CategoryID:  uint(categoryID),
 		Name:        req.Name,
 		Price:       req.Price,
 		Stock:       req.Stock,
 		Unit:        req.Unit,
-		Image:       req.Image,
+		Image:       imagePaths["image"][0],
 		Description: req.Description,
 	}
 

@@ -9,10 +9,10 @@ import (
 type Product struct {
 	ID            uint    `gorm:"primaryKey;autoIncrement"`
 	TenantID      uint    `gorm:"not null;index"`
-	CategoryID    *uint   `gorm:"index"`
+	CategoryID    uint    `gorm:"index"`
 	Name          string  `gorm:"type:varchar(255);not null"`
-	SKU           string  `gorm:"type:varchar(50);unique"`
-	Barcode       string  `gorm:"type:varchar(100);unique"`
+	SKU           *string `gorm:"type:varchar(50);unique"`
+	Barcode       *string `gorm:"type:varchar(100);unique"`
 	Price         float64 `gorm:"not null"`
 	CostPrice     *float64
 	Discount      float64   `gorm:"default:0"`

@@ -12,6 +12,10 @@ func main() {
 	config.ConnectDB()
 
 	// config.DB.AutoMigrate(&models.User{})
+	// config.DB.AutoMigrate(&models.Product{})
+	// config.DB.AutoMigrate(&models.Categories{})
+	// config.DB.AutoMigrate(&models.Order{})
+	// config.DB.AutoMigrate(&models.OrderDe{})
 
 	app := fiber.New()
 	routes.AuthRoutes(app)

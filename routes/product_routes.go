@@ -12,7 +12,7 @@ func SetupProductRoutes(app *fiber.App) {
 
 	products.Get("/", controllers.GetProducts)
 	products.Get("/:id", controllers.GetProductByID)
-	products.Post("/", controllers.CreateProduct)
+	products.Post("/", middlewares.UploadImagesMiddleware, controllers.CreateProduct)
 
 	categories := app.Group("/categories")
 	categories.Get("/", controllers.GetCategories)
