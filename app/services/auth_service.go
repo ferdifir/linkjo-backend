@@ -49,3 +49,30 @@ func LoginUser(email, password string) (string, error) {
 
 	return token, nil
 }
+
+func GetUserByID(userID *uint) (*models.User, error) {
+	var user models.User
+	result := config.DB.First(&user, userID)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return &user, nil
+}
+
+func UpdateTenantBannerImage(userID *uint, bannerImage string) (*models.User, error) {
+	var user models.User
+	result := config.DB.First(&user, userID)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	user.Photo = bannerImage
+	result = config.DB.Save(&user)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return &user, nil
+}
+
+func UpdateStatusTenant(userID *uint, isActive bool) error {
+	return config.DB.Model(&models.User{}).Where("id = ?", userID).Update("is_active", isActive).Error
+}

@@ -1,23 +1,50 @@
 package models
 
 import (
-	"time"
+	"entgo.io/ent"
+	"entgo.io/ent/schema/field"
 )
 
 type User struct {
-	ID         uint      `gorm:"primaryKey;autoIncrement" json:"id"`
-	OwnerName  string    `json:"owner_name"`
-	OutletName string    `json:"outlet_name"`
-	Email      string    `json:"email" gorm:"unique"`
-	Password   string    `json:"-"`
-	Phone      string    `json:"phone" gorm:"unique"`
-	Role       string    `json:"role" gorm:"default:user"`
-	Photo      string    `json:"photo" gorm:"default:'default.png'"`
-	Address    string    `json:"address"`
-	City       string    `json:"city"`
-	Latitude   float64   `json:"latitude"`
-	Longitude  float64   `json:"longitude"`
-	IsActive   bool      `json:"is_active" gorm:"default:true"`
-	CreatedAt  time.Time `json:"created_at"`
-	UpdatedAt  time.Time `json:"updated_at"`
+	ent.Schema
+}
+
+func (User) Fields() []ent.Field {
+	return []ent.Field{
+		field.Uint("id").
+			Unique(),
+		field.String("owner_name").
+			NotEmpty(),
+		field.String("outlet_name").
+			NotEmpty(),
+		field.String("email").
+			Unique().
+			NotEmpty(),
+		field.String("password").
+			Sensitive(),
+		field.String("phone").
+			Unique().
+			NotEmpty(),
+		field.String("role").
+			Default("user"),
+		field.String("photo").
+			Default("default.png"),
+		field.String("address").
+			Optional(),
+		field.String("city").
+			Optional(),
+		field.Float("latitude").
+			Default(0),
+		field.Float("longitude").
+			Default(0),
+		field.Bool("is_active").
+			Default(true),
+	}
+}
+
+// Mixin for created_at, updated_at, and soft delete (deleted_at).
+func (User) Mixin() []ent.Mixin {
+	return []ent.Mixin{
+		TimeMixin{},
+	}
 }

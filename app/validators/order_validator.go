@@ -1,7 +1,6 @@
 package validators
 
 type OrderRequest struct {
-	UserID        int            `json:"user_id" validate:"required"`
 	CustomerName  string         `json:"customer_name,omitempty"`
 	TableNumber   string         `json:"table_number,omitempty"`
 	PaymentStatus string         `json:"payment_status" validate:"required,oneof=pending paid cancelled"`
@@ -12,4 +11,8 @@ type OrderRequest struct {
 type OrderProduct struct {
 	ProductID int `json:"product_id" validate:"required"`
 	Quantity  int `json:"quantity" validate:"required,min=1"`
+}
+
+type PaymentRequest struct {
+	PaymentStatus string `json:"payment_status" validate:"required,oneof=pending paid cancelled"`
 }

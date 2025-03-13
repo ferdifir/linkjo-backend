@@ -1,8 +1,35 @@
 package models
 
+import (
+	"entgo.io/ent"
+	"entgo.io/ent/schema/edge"
+	"entgo.io/ent/schema/field"
+)
+
+// Categories schema definition
 type Categories struct {
-	ID       uint         `gorm:"primaryKey;autoIncrement"`
-	Name     string       `gorm:"type:varchar(255);not null"`
-	ParentID *uint        `gorm:"index"`
-	Children []Categories `gorm:"foreignKey:ParentID"`
+	ent.Schema
+}
+
+// Fields of the Categories.
+func (Categories) Fields() []ent.Field {
+	return []ent.Field{
+		field.Uint("id").
+			Unique(),
+		field.String("name").
+			NotEmpty().
+			MaxLen(255),
+		field.Uint("parent_id").
+			Optional(),
+	}
+}
+
+// Edges of the Categories.
+func (Categories) Edges() []ent.Edge {
+	return []ent.Edge{
+		edge.To("children", Categories.Type).
+			From("parent").
+			Unique().
+			Field("parent_id"),
+	}
 }

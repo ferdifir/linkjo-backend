@@ -24,6 +24,10 @@ type LoginRequest struct {
 	Password string `json:"password" validate:"required,min=6"`
 }
 
+type UpdateStatusRequest struct {
+	IsActive bool `json:"is_active"`
+}
+
 func ValidateStruct(s interface{}) error {
 	return validate.Struct(s)
 }
